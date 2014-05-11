@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
  Portions Copyright (C) 2011 Greg Copeland
-
+ Portions Copyright (C) 2014 A. T. Brask <atbrask@gmail.com>
+ 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  version 2 as published by the Free Software Foundation.
@@ -16,8 +17,8 @@
 #ifndef __RF24_H__
 #define __RF24_H__
 
-#include <nRF24L01.h>
-#include <RF24_config.h>
+#include "nRF24L01.h"
+#include "RF24_config.h"
 
 /**
  * Power Amplifier level.
@@ -166,50 +167,6 @@ protected:
    * @return Current value of status register
    */
   uint8_t get_status(void);
-
-  /**
-   * Decode and print the given status to stdout
-   *
-   * @param status Status value to print
-   *
-   * @warning Does nothing if stdout is not defined.  See fdevopen in stdio.h
-   */
-  void print_status(uint8_t status);
-
-  /**
-   * Decode and print the given 'observe_tx' value to stdout
-   *
-   * @param value The observe_tx value to print
-   *
-   * @warning Does nothing if stdout is not defined.  See fdevopen in stdio.h
-   */
-  void print_observe_tx(uint8_t value);
-
-  /**
-   * Print the name and value of an 8-bit register to stdout
-   *
-   * Optionally it can print some quantity of successive
-   * registers on the same line.  This is useful for printing a group
-   * of related registers on one line.
-   *
-   * @param name Name of the register
-   * @param reg Which register. Use constants from nRF24L01.h
-   * @param qty How many successive registers to print
-   */
-  void print_byte_register(const char* name, uint8_t reg, uint8_t qty = 1);
-
-  /**
-   * Print the name and value of a 40-bit address register to stdout
-   *
-   * Optionally it can print some quantity of successive
-   * registers on the same line.  This is useful for printing a group
-   * of related registers on one line.
-   *
-   * @param name Name of the register
-   * @param reg Which register. Use constants from nRF24L01.h
-   * @param qty How many successive registers to print
-   */
-  void print_address_register(const char* name, uint8_t reg, uint8_t qty = 1);
 
   /**
    * Turn on or off the special features of the chip
@@ -559,13 +516,6 @@ public:
   /**@{*/
 
   /**
-   * Print a giant block of debugging information to stdout
-   *
-   * @warning Does nothing if stdout is not defined.  See fdevopen in stdio.h
-   */
-  void printDetails(void);
-
-  /**
    * Enter low-power mode
    *
    * To return to normal power mode, either write() some data or
@@ -673,7 +623,6 @@ public:
    */
   bool testRPD(void) ;
 
-
   /**
    * Calculate the maximum timeout in us based on current hardware
    * configuration.
@@ -694,171 +643,5 @@ public:
   /**@}*/
 };
 
-/**
- * @example GettingStarted.pde
- *
- * This is an example which corresponds to my "Getting Started" blog post:
- * <a style="text-align:center" href="http://maniacbug.wordpress.com/2011/11/02/getting-started-rf24/">Getting Started with nRF24L01+ on Arduino</a>. 
- *
- * It is an example of how to use the RF24 class.  Write this sketch to two 
- * different nodes.  Put one of the nodes into 'transmit' mode by connecting 
- * with the serial monitor and sending a 'T'.  The ping node sends the current 
- * time to the pong node, which responds by sending the value back.  The ping 
- * node can then see how long the whole cycle took.
- */
-
-/**
- * @example nordic_fob.pde
- *
- * This is an example of how to use the RF24 class to receive signals from the
- * Sparkfun Nordic FOB.  See http://www.sparkfun.com/products/8602 .
- * Thanks to Kirk Mower for providing test hardware.
- */
-
-/**
- * @example led_remote.pde
- *
- * This is an example of how to use the RF24 class to control a remote
- * bank of LED's using buttons on a remote control.
- *
- * Every time the buttons change on the remote, the entire state of
- * buttons is send to the led board, which displays the state.
- */
-
-/**
- * @example pingpair.pde
- *
- * This is an example of how to use the RF24 class.  Write this sketch to two
- * different nodes, connect the role_pin to ground on one.  The ping node sends
- * the current time to the pong node, which responds by sending the value back.
- * The ping node can then see how long the whole cycle took.
- */
-
-/**
- * @example pingpair_maple.pde 
- *
- * This is an example of how to use the RF24 class on the Maple.  For a more
- * detailed explanation, see my blog post:
- * <a href="http://maniacbug.wordpress.com/2011/12/14/nrf24l01-running-on-maple-3/">nRF24L01+ Running on Maple</a>
- *
- * It will communicate well to an Arduino-based unit as well, so it's not for only Maple-to-Maple communication.
- * 
- * Write this sketch to two different nodes,
- * connect the role_pin to ground on one.  The ping node sends the current time to the pong node,
- * which responds by sending the value back.  The ping node can then see how long the whole cycle
- * took.
- */
-
-/**
- * @example starping.pde
- *
- * This sketch is a more complex example of using the RF24 library for Arduino.
- * Deploy this on up to six nodes.  Set one as the 'pong receiver' by tying the
- * role_pin low, and the others will be 'ping transmit' units.  The ping units
- * unit will send out the value of millis() once a second.  The pong unit will
- * respond back with a copy of the value.  Each ping unit can get that response
- * back, and determine how long the whole cycle took.
- *
- * This example requires a bit more complexity to determine which unit is which.
- * The pong receiver is identified by having its role_pin tied to ground.
- * The ping senders are further differentiated by a byte in eeprom.
- */
-
-/**
- * @example pingpair_pl.pde
- *
- * This is an example of how to do two-way communication without changing
- * transmit/receive modes.  Here, a payload is set to the transmitter within
- * the Ack packet of each transmission.  Note that the payload is set BEFORE
- * the sender's message arrives.
- */
-
-/**
- * @example pingpair_irq.pde
- *
- * This is an example of how to user interrupts to interact with the radio.
- * It builds on the pingpair_pl example, and uses ack payloads.
- */
-
-/**
- * @example pingpair_sleepy.pde
- *
- * This is an example of how to use the RF24 class to create a battery-
- * efficient system.  It is just like the pingpair.pde example, but the
- * ping node powers down the radio and sleeps the MCU after every
- * ping/pong cycle.
- */
-
-/**
- * @example scanner.pde
- *
- * Example to detect interference on the various channels available.
- * This is a good diagnostic tool to check whether you're picking a
- * good channel for your application.
- *
- * Inspired by cpixip.
- * See http://arduino.cc/forum/index.php/topic,54795.0.html
- */
-
-/**
- * @mainpage Driver for nRF24L01(+) 2.4GHz Wireless Transceiver
- *
- * @section Goals Design Goals
- * 
- * This library is designed to be...
- * @li Maximally compliant with the intended operation of the chip
- * @li Easy for beginners to use
- * @li Consumed with a public interface that's similiar to other Arduino standard libraries
- *
- * @section News News
- * 
- * NOW COMPATIBLE WITH ARDUINO 1.0 - The 'master' branch and all examples work with both Arduino 1.0 and earlier versions.  
- * Please <a href="https://github.com/maniacbug/RF24/issues/new">open an issue</a> if you find any problems using it with any version of Arduino.
- *
- * NOW COMPATIBLE WITH MAPLE - RF24 has been tested with the 
- * <a href="http://leaflabs.com/store/#Maple-Native">Maple Native</a>, 
- * and should work with any Maple board.  See the pingpair_maple example.
- * Note that only the pingpair_maple example has been tested on Maple, although
- * the others can certainly be adapted.
- *
- * @section Useful Useful References
- * 
- * Please refer to:
- *
- * @li <a href="http://maniacbug.github.com/RF24/">Documentation Main Page</a>
- * @li <a href="http://maniacbug.github.com/RF24/classRF24.html">RF24 Class Documentation</a>
- * @li <a href="https://github.com/maniacbug/RF24/">Source Code</a>
- * @li <a href="https://github.com/maniacbug/RF24/archives/master">Downloads Page</a>
- * @li <a href="http://www.nordicsemi.com/files/Product/data_sheet/nRF24L01_Product_Specification_v2_0.pdf">Chip Datasheet</a>
- *
- * This chip uses the SPI bus, plus two chip control pins.  Remember that pin 10 must still remain an output, or
- * the SPI hardware will go into 'slave' mode.
- *
- * @section More More Information
- *
- * @subpage FAQ
- *
- * @section Projects Projects
- *
- * Stuff I have built with RF24
- *
- * <img src="http://farm7.staticflickr.com/6044/6307669179_a8d19298a6_m.jpg" width="240" height="160" alt="RF24 Getting Started - Finished Product">
- *
- * <a style="text-align:center" href="http://maniacbug.wordpress.com/2011/11/02/getting-started-rf24/">Getting Started with nRF24L01+ on Arduino</a> 
- *
- * <img src="http://farm8.staticflickr.com/7159/6645514331_38eb2bdeaa_m.jpg" width="240" height="160" alt="Nordic FOB and nRF24L01+">
- *
- * <a style="text-align:center" href="http://maniacbug.wordpress.com/2012/01/08/nordic-fob/">Using the Sparkfun Nordic FOB</a> 
- *
- * <img src="http://farm7.staticflickr.com/6097/6224308836_b9b3b421a3_m.jpg" width="240" height="160" alt="RF Duinode V3 (2V4)">
- *
- * <a href="http://maniacbug.wordpress.com/2011/10/19/sensor-node/">Low-Power Wireless Sensor Node</a>
- *
- * <img src="http://farm8.staticflickr.com/7012/6489477865_b56edb629b_m.jpg" width="240" height="161" alt="nRF24L01+ connected to Leaf Labs Maple Native">
- *
- * <a href="http://maniacbug.wordpress.com/2011/12/14/nrf24l01-running-on-maple-3/">nRF24L01+ Running on Maple</a>
- */
-
 #endif // __RF24_H__
 // vim:ai:cin:sts=2 sw=2 ft=cpp
-

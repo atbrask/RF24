@@ -1,68 +1,44 @@
-
 /*
- Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
+ATtiny84 / avr-libc compatibility macros for the RF24 library by maniacbug
+Copyright (c) 2014 A.T.Brask <atbrask@gmail.com>
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- version 2 as published by the Free Software Foundation.
- */
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT 
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 
+59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+
 
 #ifndef __RF24_CONFIG_H__
 #define __RF24_CONFIG_H__
 
-#if ARDUINO < 100
-#include <WProgram.h>
-#else
-#include <Arduino.h>
-#endif
-
-#include <stddef.h>
-
-// Stuff that is normally provided by Arduino
-#ifdef ARDUINO
-#include <SPI.h>
-#else
 #include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-extern HardwareSPI SPI;
-#define _BV(x) (1<<(x))
-#endif
-
-#undef SERIAL_DEBUG
-#ifdef SERIAL_DEBUG
-#define IF_SERIAL_DEBUG(x) ({x;})
-#else
-#define IF_SERIAL_DEBUG(x)
-#if defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__)
-#define printf_P(...)
-#endif
-#endif
-
-// Avoid spurious warnings
-#if 1
-#if ! defined( NATIVE ) && defined( ARDUINO )
-#undef PROGMEM
-#define PROGMEM __attribute__(( section(".progmem.data") ))
-#undef PSTR
-#define PSTR(s) (__extension__({static const char __c[] PROGMEM = (s); &__c[0];}))
-#endif
-#endif
-
-// Progmem is Arduino-specific
-#ifdef ARDUINO
+#include <stddef.h>
 #include <avr/pgmspace.h>
-#define PRIPSTR "%S"
-#else
-typedef char const char;
-typedef uint16_t prog_uint16_t;
-#define PSTR(x) (x)
-#define printf_P printf
-#define strlen_P strlen
-#define PROGMEM
-#define pgm_read_word(p) (*(p)) 
-#define PRIPSTR "%s"
-#endif
+#include <util/delay.h>
+#include "ATtiny84SPI.h"
 
-#endif // __RF24_CONFIG_H__
-// vim:ai:cin:sts=2 sw=2 ft=cpp
+#define min(a,b) ((a) < (b) ? (a) : (b))
+
+#define delayMicroseconds(x) _delay_us(x)
+#define delay(x) _delay_ms(x)
+
+#define LOW 0
+#define HIGH 1
+#define digitalWrite(pin,value) { if (value) PORTA |= _BV(pin); else PORTA &= ~_BV(pin); }
+
+#define INPUT 0
+#define OUTPUT 1
+#define pinMode(pin, direction) { if (direction) DDRA |= _BV(pin); else DDRA &= ~_BV(pin); }
+
+extern ATtiny84SPI SPI;
+
+#endif
