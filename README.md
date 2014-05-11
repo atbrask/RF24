@@ -1,11 +1,11 @@
-# ATtiny84 / avr-libc driver for nRF24L01(+) 2.4GHz Wireless Transceiver
+## ATtiny84 / avr-libc driver for nRF24L01(+) 2.4GHz Wireless Transceiver
 
-## Motivation for this fork
+### Motivation for this fork
 I needed a way to interface with the popular nRF chips with an ATtiny84. The
 best way to achieve this was to stand on the shoulders of giants and modify
 the well-known RF24 Arduino library to fit my purposes.
 
-## Differences compared to other versions of the RF24 library
+### Differences compared to other versions of the RF24 library
 The ATtiny84 is a much more limited platform than an Arduino is. Therefore,
 I have changed a few things to make the library smaller and more lean:
 
@@ -19,31 +19,10 @@ removed the tests and examples, as they make little sense in my use case.
 
 The resulting library works flawlessly and uses very little resources.
 
-NOTE: Remember to define F_CPU before including this library.
+### Notes
+Remember to define F_CPU before including this library.
 
-/atbrask
-
------------------------------------------
-Original README text by maniacbug et al.:
------------------------------------------
-
-# Arduino driver for nRF24L01(+) 2.4GHz Wireless Transceiver
-
-Design Goals: This library is designed to be...
-
-* Maximally compliant with the intended operation of the chip
-* Easy for beginners to use
-* Consumed with a public interface that's similiar to other Arduino standard libraries
-* Built against the standard SPI library. 
-
-* Modifications to the RF24 library in this fork is backward compatible. A single
-  enhancement which may cause issue, is code which relies on the driver to power down the
-  radio, as a side effect. The radio is no longer powered down after each transmit. Rather,
-  the application must take responsibility for power management. Normally this is
-  achieved by use of powerDown and powerUp. If you wish to maximize power efficiency,
-  you must call powerDown after transmit (write, startWrite).
-
-Please refer to:
+For more information about the original RF24 project, please refer to:
 
 * [Documentation Main Page](http://maniacbug.github.com/RF24)
 * [RF24 Class Documentation](http://maniacbug.github.com/RF24/classRF24.html)
@@ -51,8 +30,5 @@ Please refer to:
 * [Downloads](https://github.com/maniacbug/RF24/archives/master)
 * [Chip Datasheet](http://www.nordicsemi.com/files/Product/data_sheet/nRF24L01_Product_Specification_v2_0.pdf)
 
-This chip uses the SPI bus, plus two chip control pins.  Remember that pin 10 must still remain an output, or
-the SPI hardware will go into 'slave' mode. This is because the 'SS', or slave select, pin on the arduino
-controls if the arduino is the slave. For RF24 use, the arduino is the master and the RF24 is the slave.
-
+/atbrask
 
