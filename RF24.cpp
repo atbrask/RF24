@@ -281,12 +281,6 @@ void RF24::startListening(void)
   if (pipe0_reading_address)
     write_register(RX_ADDR_P0, reinterpret_cast<const uint8_t*>(&pipe0_reading_address), 5);
 
-#if 0
-  // Flush buffers
-  flush_rx();
-  flush_tx();
-#endif
-
   // Go!
   ce(HIGH);
 
@@ -385,7 +379,7 @@ void RF24::startWrite( const void* buf, uint8_t len, const bool multicast )
 
   // Allons!
   ce(HIGH);
-  delayMicroseconds(10);
+  delay(10);
   ce(LOW);
 }
 
